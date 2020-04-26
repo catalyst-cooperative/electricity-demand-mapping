@@ -1,4 +1,6 @@
-def create_save_stacked_intersection_df(gdf_primary, gdf_secondary, gdf_primary_col, gdf_secondary_col,
+import geopandas
+
+def create_save_stacked_intersection_df(gdf_primary, gdf_secondary, gdf_primary_col="FIPS", gdf_secondary_col="ID",
                                         geom_primary="geometry", geom_secondary="geometry", file_save=True,
                                         file_save_name="tracts_planning_area_ratios_stacked.pkl"):
     
@@ -20,8 +22,8 @@ def create_save_stacked_intersection_df(gdf_primary, gdf_secondary, gdf_primary_
     
     """
     
-    new_df = geopandas.overlay(gdf_primary, gdf_secondary, how='intersection')
-    new_df["area_derived"] = new_df["area_derived"].area
+    new_df = geopandas.overlay(gdf_primary[[gdf_primary_col, geom_primary]], gdf_secondary[[gdf_secondary_col, geom_secondary]], how='intersection')
+    new_df["area_derived"] = new_df["geometry"].area
     
     gdf_primary["primary_area_derived"] = gdf_primary[geom_primary].area
     gdf_secondary["secondary_area_derived"] = gdf_secondary[geom_secondary].area
